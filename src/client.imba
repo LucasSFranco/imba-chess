@@ -5,7 +5,7 @@ var Square = Squares
 
 tag Game
 
-	prop move
+	prop move default: Move.new(0)
 	prop selected
 	prop player default: 1
 	
@@ -19,14 +19,14 @@ tag Game
 			player = 1
 
 	def doMove index
-		if !selected or (Square[index] and Square[index].player === player)
-			selected = index
-			move = Move.new(index)
-		else
+		if selected and (move.action:moves.includes(index) or move.action:attacks.includes(index))
 			move.target=(index)
 			selected = undefined
-			playerChange()
-		move.move(player)
+		else if Square[index]
+			selected = index
+			move = Move.new(index)
+		console.log move
+		playerChange() if move.move(player)
 		render
 
 	def isEven num

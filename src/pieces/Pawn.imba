@@ -19,18 +19,24 @@ export class Pawn < Piece
 		2: 12
 	}
 
+	prop promotionSquares default: {
+		1: [-12]
+		2: 12
+	}
+
+	def doPromotion position, target
+		if 
+
 	def doEnPassant position, target
 		if target === enPassantAttack
-			Square[enPassantAttack] = Square[position]
-			Square[enPassantAttack+enPassantPaths[player]*(-1)] = null
-
+			Square[enPassantAttack+enPassantPaths[player]*(-1)] = undefined
 
 	def verifyEnPassant position, target
 		let index = enPassantPaths[player]
 		if unmoved and target === position+2*index
-			if Square[target - 1]
+			if typeof Square[target - 1] === "object"
 				Square[target - 1].enPassantAttack = position+index
-			if Square[target + 1] 
+			if typeof Square[target + 1] === "object"
 				Square[target + 1].enPassantAttack = position+index
 
 		
@@ -45,7 +51,7 @@ export class Pawn < Piece
 			action:defenses.push(position+index)
 		if enPassantAttack
 			action:attacks.push(enPassantAttack) 
-
+			enPassantAttack = undefined
 		# Moves
 		let index = paths[player].slice(0,1).pop
 		unless Square[position+index]
