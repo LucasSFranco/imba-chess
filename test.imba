@@ -1,8 +1,3 @@
-let x = 12+13*5
-let y = 12+13*6
-let z = x+13
-
-console.log x,y,z
 
 
 # # Fazer movimento das peças, suavemente
