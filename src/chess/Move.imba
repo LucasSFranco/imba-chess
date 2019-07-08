@@ -1,4 +1,5 @@
 import Squares from '../Squares'
+
 var Square = Squares
 
 export class Move
@@ -16,8 +17,9 @@ export class Move
 
 	def pawnEspecials source, target
 		if Square[source].type === :pawn
-			Square[source].verifyEnPassant(source, target)
+			Square[source].doPromotion(source, target)
 			Square[source].doEnPassant(source, target)
+			Square[source].verifyEnPassant(source, target)
 
 	def clear
 		target = undefined
