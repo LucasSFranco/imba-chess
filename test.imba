@@ -1,3 +1,12 @@
+Array:prototype:first = do (
+	this[0]
+)
+
+var x = []  
+x.splice(0, x:length, "NaN")
+
+
+console.log x, typeof x.first
 
 
 # # Fazer movimento das peças, suavemente

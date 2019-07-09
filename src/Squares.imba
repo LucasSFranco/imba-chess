@@ -1,1 +1,0 @@
-export var Squares = Array.new(144)
