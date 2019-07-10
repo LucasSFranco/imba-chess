@@ -7,24 +7,14 @@ export class Knight < Piece
 
 	def initialize player 
 		super player, (player === 1 ? "https://upload.wikimedia.org/wikipedia/commons/7/70/Chess_nlt45.svg" : "https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_ndt45.svg")
-		type = "knight"
-		paths = [-25, -23, -14, -10, 10, 14, 23, 25]
+		@type = "knight"
+		@paths = [-25, -23, -14, -10, 10, 14, 23, 25]
 
-	def getAction position
+	def getMoves position
 
-		action = {moves: [], attacks: [], defenses: []}
+		let attackPath = self.getStandard(position)
 
-		for path in paths
-			let index = position+path
+		for attack, index in moves:attack
+			self.getCheck(position, attack, attackPath[index])
 
-			if Square[index] !== "margin"
-				unless Square[index]
-					action:moves.push(index)
-				else if Square[index].player !== player
-					action:attacks.push(index)
-					if Square[index].type === "king" 
-						getRestriction(position, index, path).forEach do |move| checkMoves.push(move) unless checkMoves.includes(move)
-				else
-					action:defenses.push(index)				
-
-		action = verifyPinMoves(action)
+		self.verifyPin

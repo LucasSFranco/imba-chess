@@ -8,15 +8,16 @@ import Squares from '../Global'
 
 var Square = Squares
 
+# It puts all pieces in their initial squares
 export def Initializer
 	Squares.fill("margin")
 
-	for r, row in Array.new(6) 
+	for r, row in Array.new(4) 
 		for c, col in Array.new(8)
-			let index = (row+3)*12 + (col+2) 
+			let index = (row+4)*12 + (col+2) 
 			Square[index] = undefined
 	
-	for c, col in Array.new(4) 
+	for c, col in Array.new(8) 
 		Square[col+38] = Pawn.new 2
 		Square[col+98] = Pawn.new 1
 

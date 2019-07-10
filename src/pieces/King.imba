@@ -6,11 +6,15 @@ var Square = Squares
 export class King < Piece
 
 	prop castlingCondition
+	prop castlingSquares default: {
+		right: [0, -1, -2, -3, -4]
+		left: [0, 1, 2, 3]
+	}
 
 	def initialize player 
 		super player, (player === 1 ? "https://upload.wikimedia.org/wikipedia/commons/4/42/Chess_klt45.svg" : "https://upload.wikimedia.org/wikipedia/commons/f/f0/Chess_kdt45.svg")
-		type = "king"
-		paths = [-13, -12, -11, -1, 1, 11, 12, 13]
+		@type = "king"
+		@paths = [-13, -12, -11, -1, 1, 11, 12, 13]
 
 	def verifyCastling source, allEnemyMoves
 		if unmoved
@@ -29,57 +33,49 @@ export class King < Piece
 						break 
 				if moved and unattacked and rookCondition
 					castlingCondition = true
-					action:moves.push(source+paths[2])
+					moves:displacement.push(source+paths[2])
 			)
 
 	def doCastling source, target
-		if castlingCondition
+		if @castlingCondition
 			[[-1, -2, -4], [1, 2, 3]].forEach(do |paths|
 				if target === (source + paths[1])
 					Square[source+paths[0]] = Square[source+paths[2]]
 					Square[source+paths[2]] = undefined
 			)
 
-
-	def getAllEnemyMoves
-		let allEnemyMoves = []
+	def getAllOpponentMoves
+		let allOpponentMoves = []
 
 		for square, index in Squares
-			let enemyMoves = []
+			let opponentMoves = Array.new
 			if typeof square === "object" and square.player !== player
 				if !(square.type === "king") and !(square.type === "pawn") 
-					enemyMoves = [*square.action:moves, *square.action:defenses]
+					opponentMoves = [*square.moves:displacement, *square.moves:defense]
 				else if square.type === "king"
-					for path in paths
-						enemyMoves.push(index+path)
+					for path in @paths
+						opponentMoves.push(index+path)
 				else
-					enemyMoves = square.action:defenses
-				for move in enemyMoves
-					unless allEnemyMoves.includes(move)
-						allEnemyMoves.push(move)
-		return allEnemyMoves
+					opponentMoves = square.moves:defense
+				for move in opponentMoves
+					unless allOpponentMoves.includes(move)
+						allOpponentMoves.push(move)
 
-	def getAction position
-		action = {moves: [], attacks: [], defenses: []} 
+		return allOpponentMoves
 
-		let allEnemyMoves = getAllEnemyMoves()
-
-		for path in paths
-			let index = position+path
-
-			if Square[index] !== "margin"
-				unless Square[index]
-					action:moves.push(index)
-				else if Square[index].player !== player
-					action:attacks.push(index)
-				else
-					action:defenses.push(index)			
-
-		for key of action
+	def verifyRestriction allOpponentMoves
+		for type of moves
 			let legalMoves = []
-			for move in action[key]
-				unless allEnemyMoves.includes(move)
+			for move in moves[type]
+				unless allOpponentMoves.includes(move)
 					legalMoves.push(move)
-			action[key] = legalMoves
+			moves[type] = legalMoves
 
-		verifyCastling(position, allEnemyMoves)
+	def getMoves position 
+
+		self.getStandard(position)	
+
+		let allOpponentMoves = self.getAllOpponentMoves
+
+		self.verifyRestriction(allOpponentMoves)
+		self.verifyCastling(position, allOpponentMoves)

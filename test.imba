@@ -1,13 +1,8 @@
-Array:prototype:first = do (
-	this[0]
-)
-
-var x = []  
-x.splice(0, x:length, "NaN")
-
-
-console.log x, typeof x.first
-
+var x = Array.new 
+for el, i in Array.new(10)
+	x.push(i)
+	var y = 10
+console.log x, y
 
 # # Fazer movimento das peças, suavemente
 # # Fazer placar de jogadas

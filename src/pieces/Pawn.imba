@@ -32,33 +32,37 @@ export class Pawn < Piece
 		if unmoved and target === position+2*index
 			if typeof Square[target - 1] === "object" and Square[target - 1].type === "pawn"
 				Square[target - 1].enPassantAttack = position+index
-			if typeof Square[target + 1] === "object" and Square[target - 1].type === "pawn"
+			if typeof Square[target + 1] === "object" and Square[target + 1].type === "pawn"
 				Square[target + 1].enPassantAttack = position+index
 
-	def getAction position
+	def getMoves position
 
-		action = {moves: [], attacks: [], defenses: []}
+		moves = {displacement: [], attack: [], defense: []}
 
 		let indexes = paths[player].slice(-2)
 		for index in indexes
 			if typeof Square[position+index] === "object" and Square[position+index].player !== player
-				action:attacks.push(position+index)
+				moves:attack.push(position+index)
 				if Square[position+index].type === "king"
-					getRestriction(position, position+index, index).forEach do |move| checkMoves.push(move) unless checkMoves.includes(move)
-			action:defenses.push(position+index)
+					if checkMoves:length === 0
+						checkMoves.push(getRestriction(position, index, index))
+					else if checkMoves:length > 0
+						let legalMoves = []
+						for move in getRestriction(position, index, index)
+							unless checkMoves.first.includes(move)
+								legalMoves.push(move)
+						
+						checkMoves.push(legalMoves) if typeof legalMoves.first === "number" 
+			moves:defense.push(position+index)
 
 		if enPassantAttack
-			action:attacks.push(enPassantAttack)
+			moves:attack.push(enPassantAttack)
 
 		let index = paths[player][0]
 		unless Square[position+index]
-			action:moves.push(position+index)
+			moves:displacement.push(position+index)
 			if !Square[position+2*index] and unmoved
-				action:moves.push(position+2*index)
+				moves:displacement.push(position+2*index)
 
-		action = verifyPinMoves(action)
-
-
-
-
+		self.verifyPin
 
