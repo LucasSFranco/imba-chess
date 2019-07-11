@@ -8,7 +8,6 @@ import Squares from '../Global'
 
 var Square = Squares
 
-# It puts all pieces in their initial squares
 export def Initializer
 	Squares.fill("margin")
 

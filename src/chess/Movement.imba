@@ -1,6 +1,4 @@
-import Squares, CheckMoves from '../Global'
-
-var Square = Squares
+import Squares as Square, CheckMoves from '../Global'
 
 export class Movement
 	
@@ -8,24 +6,19 @@ export class Movement
 	prop target
 	prop player default: 1 
 
-	def clearEnPassant
-		for square in Squares
-			if typeof square === "object" and square.type === "pawn" and square.enPassantAttack
-				square.enPassantAttack = undefined
-
-	def pawnEspecials source, target
+	def verifyPawnEspecials source, target
 		if Square[source].type === :pawn
-			Square[source].doEnPassant(source, target)
+			Square[source].doEnpassant(source, target)
 			Square[source].doPromotion(source, target)
-		clearEnPassant()
+		Square[source].clearEnpassantCondition
 		if Square[source].type === :pawn
-			Square[source].verifyEnPassant(source, target)
+			Square[source].verifyEnpassant(source, target)
 	
-	def kingEspecials source, target
+	def verifyKingEspecials source, target
 		if Square[source].type === :king
-			Square[source].doCastling(source, target)
+			Square[source].doCastle(source, target)
 
-	def moved
+	def isMoved
 		if Square[source].unmoved
 			Square[source].unmoved = false
 
@@ -46,17 +39,17 @@ export class Movement
 
 	def doMove 
 		if target 
-			self.pawnEspecials(source, target)
-			self.kingEspecials(source, target)
+			self.verifyPawnEspecials(source, target)
+			self.verifyKingEspecials(source, target)
 
-			self.moved
+			self.isMoved
 			self.changeSquare
 			self.changeTurn
 			self.reset
-			return {displacement: [], attack: [], defense: []}
 		else if source
-			Square[source].check
+			Square[source].verifyCheck
 			return Square[source].player === player ? Square[source].moves : {displacement: [], attack: [], defense: []}
+		return {displacement: [], attack: [], defense: []}
 
 
 

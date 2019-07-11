@@ -1,8 +1,7 @@
-var x = Array.new 
-for el, i in Array.new(10)
-	x.push(i)
-	var y = 10
-console.log x, y
+var x = [[123,123], [123,123]]
+if checkMoves:length > 1
+	checkMoves.splice(0, checkMoves:length, [])
+console.log x
 
 # # Fazer movimento das peças, suavemente
 # # Fazer placar de jogadas

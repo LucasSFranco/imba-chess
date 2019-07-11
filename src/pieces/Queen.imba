@@ -1,13 +1,10 @@
 import Piece from './Piece'
-import Squares from '../Global'
-
-var Square = Squares
 
 export class Queen < Piece
 
 	def initialize player 
-		super player, (player === 1 ? "https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_qlt45.svg" : "https://upload.wikimedia.org/wikipedia/commons/4/47/Chess_qdt45.svg")
-		@type = "queen"
+		super player, (player === 1 ? "https://bit.ly/2XRvzSN" : "https://bit.ly/2JswLUr")
+		@type = :queen
 		@paths = [-13, -12, -11, -1, 1, 11, 12, 13]
 
 	def getMoves position
