@@ -8,7 +8,8 @@
 ```
 git clone https://github.com/LucasSFranco/imba-chess
 cd imba-chess
-npm run start
+npm i
+npm run dev
 ```
 
 ###### My first game 🧡
